@@ -1,0 +1,7 @@
+services:
+  - type: web
+    runtime: static
+    name: little-known-game
+    buildCommand: "echo ready"
+    staticPublishPath: .
+    autoDeploy: true

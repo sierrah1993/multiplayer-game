@@ -1,0 +1,83 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+  <meta name="theme-color" content="#f6f3eb" />
+  <title>Little Known — a get-to-know-you game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+  <script src="https://unpkg.com/peerjs@1.5.5/dist/peerjs.min.js"></script>
+  <script defer src="app.js"></script>
+</head>
+<body>
+  <div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+  <header class="topbar">
+    <a class="brand" href="#" aria-label="Little Known home"><span class="brand-mark">lk</span><span>little known</span></a>
+    <div class="top-note"><span class="live-dot"></span> made for a good catch-up</div>
+  </header>
+  <main class="shell">
+    <section id="landing" class="landing">
+      <div class="hero-copy">
+        <div class="eyebrow"><span class="sparkle">✳</span> THE FRIENDSHIP GAME</div>
+        <h1>How well do<br />you <em>really</em> know<br class="mobile-break" /> each other?</h1>
+        <p class="hero-sub">Three little stories. One tiny fib. A lovely way to find out what you didn’t know.</p>
+        <label class="name-entry" style="display:flex;align-items:center;gap:10px;margin-top:17px;font-size:10px;color:#8b958d">Playing as <input id="host-name" maxlength="18" placeholder="Your name" autocomplete="nickname" style="width:148px;height:30px;border:0;border-bottom:1px solid #cdd5c8;background:transparent;outline:0;font:12px 'DM Sans',sans-serif;color:#22312d" /></label>
+        <div class="hero-actions">
+          <button id="create-room" class="button button-primary button-large"><span>Start a room</span><span class="arrow">↗</span></button>
+          <button id="show-join" class="button button-quiet button-large">Join a room <span>→</span></button>
+        </div>
+        <div id="join-form" class="join-form hidden">
+          <input id="room-code" maxlength="6" placeholder="ROOM CODE" aria-label="Room code" autocomplete="off" />
+          <input id="join-name" maxlength="18" placeholder="Your name" aria-label="Your name" autocomplete="nickname" />
+          <button id="join-room" class="button button-primary">Hop in <span>→</span></button>
+        </div>
+        <div class="hero-meta"><span>✦</span> 2–8 players <span class="meta-divider">·</span> no downloads <span class="meta-divider">·</span> any device</div>
+      </div>
+      <div class="hero-art" aria-hidden="true">
+        <div class="orbit orbit-a"></div><div class="orbit orbit-b"></div>
+        <div class="sun"></div>
+        <div class="portrait portrait-one"><span>✿</span></div>
+        <div class="portrait portrait-two"><span>☻</span></div>
+        <div class="portrait portrait-three"><span>◡</span></div>
+        <div class="doodle-note note-one">wait, really?</div><div class="doodle-note note-two">i knew it! <span>↗</span></div>
+        <div class="art-card"><span class="card-small">THIS ROUND’S STORY</span><strong>I once got lost<br />in Portugal for<br /><i>three whole days.</i></strong><span class="card-tag">true or very untrue? <b>♡</b></span></div>
+        <span class="art-star star-one">✳</span><span class="art-star star-two">✦</span>
+      </div>
+    </section>
+    <section class="how-strip">
+      <div class="how-intro"><span class="section-kicker">THE SHORT VERSION</span><h2>Easy to play.<br /><em>Fun to remember.</em></h2></div>
+      <div class="how-step"><span class="step-num">01</span><div><h3>Make your room</h3><p>Share the little code with your far-away friends.</p></div></div>
+      <div class="how-step"><span class="step-num">02</span><div><h3>Tell three stories</h3><p>Two are true. One is a very convincing lie.</p></div></div>
+      <div class="how-step"><span class="step-num">03</span><div><h3>Take your best guess</h3><p>Reveal the truth, collect points, learn something new.</p></div></div>
+    </section>
+    <section id="room" class="room hidden">
+      <div class="room-top"><button id="leave-room" class="text-button">← Back</button><div class="room-chip"><span class="live-dot"></span> ROOM <b id="room-code-label">——</b></div><button id="copy-link" class="button button-outline button-small">Copy invite link <span>↗</span></button></div>
+      <div id="lobby" class="lobby-grid">
+        <div class="lobby-main"><div class="eyebrow"><span class="sparkle">✳</span> YOUR LITTLE CIRCLE</div><h1>Good things<br /><em>start here.</em></h1><p class="hero-sub">Send the invite to your people. Your room is ready when they are.</p>
+          <div class="invite-card"><div><span class="section-kicker">ROOM CODE</span><strong id="room-code-big">——</strong></div><button id="copy-code" class="copy-icon" aria-label="Copy room code">▢</button></div>
+          <button id="start-game" class="button button-primary button-large"><span>Let’s play</span><span class="arrow">↗</span></button>
+          <p id="lobby-hint" class="subtle-note">Waiting for at least one more player…</p>
+        </div>
+        <aside class="players-panel"><div class="panel-head"><span class="section-kicker">THE ROOM</span><span id="player-count" class="player-count">1 / 8</span></div><div id="player-list" class="player-list"></div><div class="panel-foot"><span class="live-dot"></span><span>Room’s open. Send the link!</span></div></aside>
+      </div>
+      <div id="game" class="game hidden">
+        <div class="game-heading"><div><div class="eyebrow"><span class="sparkle">✳</span> THE GOOD PART</div><h2 id="game-title">Your turn, Alex.</h2></div><div id="round-pill" class="round-pill">ROUND 1</div></div>
+        <div id="write-stage" class="play-card hidden"><div class="card-topline"><span class="section-kicker">TWO TRUTHS & A LIE</span><span class="card-illustration">✿</span></div><h3>Share three things<br />about yourself.</h3><p class="instruction">Two should be true. One should be a lie. Keep it interesting.</p>
+          <div class="story-inputs"><label><span>01</span><input id="story-0" maxlength="110" placeholder="A little story about me…" /></label><label><span>02</span><input id="story-1" maxlength="110" placeholder="Another thing…" /></label><label><span>03</span><input id="story-2" maxlength="110" placeholder="And one more…" /></label></div>
+          <div class="truth-pick"><span>Tap the <b>lie</b> you made up:</span><div id="lie-picker" class="lie-picker"><button data-lie="0">01</button><button data-lie="1">02</button><button data-lie="2">03</button></div></div>
+          <button id="submit-stories" class="button button-primary button-large full-button">Send the stories <span>→</span></button>
+        </div>
+        <div id="vote-stage" class="play-card hidden"><div class="card-topline"><span id="turn-label" class="section-kicker">ALEX’S TURN</span><span class="card-illustration">?</span></div><h3>Which one’s the<br /><em>little lie?</em></h3><p class="instruction">Trust your gut. What sounds just a bit too good to be true?</p><div id="story-options" class="story-options"></div><div id="vote-status" class="vote-status"></div></div>
+        <div id="waiting-stage" class="play-card waiting-card hidden"><div class="waiting-mark">✳</div><h3 id="waiting-title">The stories are on their way…</h3><p id="waiting-copy" class="instruction">Everyone’s catching up. Hang tight for a moment.</p><div class="waiting-dots"><i></i><i></i><i></i></div></div>
+        <div id="reveal-stage" class="play-card reveal-card hidden"><div class="card-topline"><span class="section-kicker">THE BIG REVEAL</span><span class="card-illustration">✦</span></div><h3 id="reveal-title">The little lie was…</h3><div id="reveal-options" class="story-options reveal-options"></div><div id="reveal-summary" class="reveal-summary"></div><div id="score-chips" class="score-chips"></div><button id="next-turn" class="button button-primary button-large full-button">Next up <span>→</span></button></div>
+        <aside class="score-panel"><div class="panel-head"><span class="section-kicker">LOVE A LEADERBOARD</span><span>✦</span></div><div id="score-list" class="score-list"></div><div class="score-foot">Points for curious minds <span>♡</span></div></aside>
+      </div>
+      <div id="toast" class="toast hidden"></div>
+    </section>
+    <footer><span>little known <b>✳</b></span><span>A little closer, one story at a time.</span></footer>
+  </main>
+</body>
+</html>
